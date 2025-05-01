@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | URL Shortener</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --light: #f8f9fa;
+            --dark: #2b2d42;
+            --gray: #6c757d;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .footer-text {
+            margin-top: 1.5rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .footer-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: #e63946;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Password toggle (would need JavaScript to implement functionality) */
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        
+        <form action="/user/login" method="post">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" id="email" name="email" required placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    <span class="password-toggle">👁️</span>
+                </div>
+            </div>
+            
+            <button type="submit">Login</button>
+            
+            <!-- You can add error message display here if needed -->
+            <!-- <div class="error-message">Invalid credentials</div> -->
+        </form>
+        
+        <p class="footer-text">
+            Don't have an account? <a href="/signup">Signup</a>
+        </p>
+    </div>
+
+    <!-- Simple password toggle functionality -->
+    <script>
+        document.querySelector('.password-toggle').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+        });
+    </script>
+</body>
+</html>

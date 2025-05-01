@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | URL Shortener</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --light: #f8f9fa;
+            --dark: #2b2d42;
+            --gray: #6c757d;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .signup-container {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 1.8rem;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .footer-text {
+            margin-top: 1.8rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .footer-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        .password-strength {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .strength-meter {
+            height: 100%;
+            width: 0;
+            background: #e63946;
+            transition: width 0.3s;
+        }
+
+        .password-requirements {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .requirement:before {
+            content: "•";
+            margin-right: 6px;
+            color: #e63946;
+        }
+
+        .requirement.valid:before {
+            color: #2a9d8f;
+        }
+
+        @media (max-width: 480px) {
+            .signup-container {
+                padding: 1.8rem;
+            }
+            
+            h1 {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h1>Create Account</h1>
+        
+        <form action="/user" method="post">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Create a password">
+                <div class="password-strength">
+                    <div class="strength-meter" id="strength-meter"></div>
+                </div>
+                <div class="password-requirements">
+                    <div class="requirement" id="length-req">At least 8 characters</div>
+                    <div class="requirement" id="number-req">Contains a number</div>
+                    <div class="requirement" id="special-req">Contains a special character</div>
+                </div>
+            </div>
+            
+            <button type="submit">Sign Up</button>
+        </form>
+        
+        <p class="footer-text">
+            Already have an account? <a href="/login">Log in here</a>
+        </p>
+    </div>
+
+    <script>
+        // Password strength indicator
+        const passwordInput = document.getElementById('password');
+        const strengthMeter = document.getElementById('strength-meter');
+        const lengthReq = document.getElementById('length-req');
+        const numberReq = document.getElementById('number-req');
+        const specialReq = document.getElementById('special-req');
+
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            
+            // Check length
+            if (password.length >= 8) {
+                strength += 1;
+                lengthReq.classList.add('valid');
+            } else {
+                lengthReq.classList.remove('valid');
+            }
+            
+            // Check for numbers
+            if (/\d/.test(password)) {
+                strength += 1;
+                numberReq.classList.add('valid');
+            } else {
+                numberReq.classList.remove('valid');
+            }
+            
+            // Check for special characters
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                strength += 1;
+                specialReq.classList.add('valid');
+            } else {
+                specialReq.classList.remove('valid');
+            }
+            
+            // Update strength meter
+            const width = (strength / 3) * 100;
+            strengthMeter.style.width = `${width}%`;
+            
+            // Update meter color
+            if (strength === 1) {
+                strengthMeter.style.background = '#e63946'; // red
+            } else if (strength === 2) {
+                strengthMeter.style.background = '#f4a261'; // orange
+            } else if (strength === 3) {
+                strengthMeter.style.background = '#2a9d8f'; // green
+            } else {
+                strengthMeter.style.background = '#e0e0e0'; // gray
+            }
+        });
+    </script>
+</body>
+</html>
